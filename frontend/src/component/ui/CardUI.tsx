@@ -16,7 +16,12 @@ export default function CardUI({ data }: { data: any }) {
         },
       }}
     >
-      <Typography fontSize={26} fontWeight={700} sx={{ mb: "5px" }}>
+      <Typography
+        color={primaryBlue400}
+        fontSize={26}
+        fontWeight={700}
+        sx={{ mb: "5px" }}
+      >
         🕶️ {data.name}
       </Typography>
       <Box
@@ -27,7 +32,7 @@ export default function CardUI({ data }: { data: any }) {
           mb: "14px",
         }}
       />
-      <Typography fontSize={16} fontWeight={600} sx={{ mb: "2px" }}>
+      <Typography fontSize={18} fontWeight={700} sx={{ mb: "2px" }}>
         {data.nickName}
       </Typography>
       <Typography fontSize={14} color="#666666">

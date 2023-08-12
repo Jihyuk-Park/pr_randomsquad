@@ -31,7 +31,7 @@ export const cardList = [
   {
     name: "연다은",
     nickName: "3분 슈퍼 조커",
-    description: "교체로 들어가 활약 후 다시 교체해 나온다.",
+    description: "교체로 들어가 활약 후 다시 교체해 나온다",
     point1: "그건 제 잔상입니다만...",
     point2: "무야호...!",
     point3: "아무말아무말",
@@ -55,7 +55,7 @@ export const cardList = [
   {
     name: "미로",
     nickName: "푸릇 개근상",
-    description: "가장 꾸준히 참석하고 있는 푸릇 중 1인, 무럭무럭 성장중이다.",
+    description: "가장 꾸준히 참석하고 있는 푸릇 중 1인, 무럭무럭 성장중이다",
     point1: "그건 제 잔상입니다만...",
     point2: "무야호...!",
     point3: "아무말아무말",
@@ -71,7 +71,7 @@ export const cardList = [
   {
     name: "김부찬",
     nickName: "푸릇푸릇 부코치",
-    description: "※주의 : 푸릇함 속에 감춰진 실력은 절대 푸릇하지 않다.",
+    description: "※주의 : 푸릇함 속에 감춰진 실력은 절대 푸릇하지 않다",
     point1: "그건 제 잔상입니다만...",
     point2: "무야호...!",
     point3: "아무말아무말",
@@ -127,7 +127,7 @@ export const cardList = [
   {
     name: "이윤경",
     nickName: "푸릇푸릇 셀럽",
-    description: "",
+    description: "푸릇푸릇을 아는데 나를 모른다?!",
     point1: "그건 제 잔상입니다만...",
     point2: "무야호...!",
     point3: "아무말아무말",
@@ -167,7 +167,7 @@ export const cardList = [
   {
     name: "김종사",
     nickName: "플랩 루터킹",
-    description: "세미 프로,,, 아이해브어 드림 ",
+    description: "세미 프로,,, 아이해브어 드림",
     point1: "그건 제 잔상입니다만...",
     point2: "무야호...!",
     point3: "아무말아무말",
