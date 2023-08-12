@@ -2,6 +2,7 @@ import CardUI from "@/component/ui/CardUI";
 import { primaryBlue400 } from "@/constant/styles/styleTheme";
 import { Box, Container, Typography } from "@mui/material";
 import { SquadSection } from "./_parts/SquadSection";
+import { CardSection } from "./_parts/CardSection";
 
 export default function MainPage() {
   return (
@@ -10,14 +11,13 @@ export default function MainPage() {
       sx={{
         backgroundColor: "#FFF",
         minHeight: "100vh",
-        py: "20px",
-        px: "15px",
       }}
     >
       <Box
+        onClick={() => alert("☆호기심이 많으시군요?☆")}
         sx={{
           backgroundColor: primaryBlue400,
-          borderRadius: "8px",
+          borderRadius: "0px",
           py: "15px",
           mb: "8px",
         }}
@@ -27,12 +27,24 @@ export default function MainPage() {
         </Typography>
       </Box>
 
+      {/* 스쿼드 섹션 */}
       <SquadSection />
 
-      <Typography fontSize={20} fontWeight={600} sx={{ mt: "25px", mb: "6px" }}>
-        푸릇 카드
-      </Typography>
-      <CardUI />
+      {/* 카드 섹션 */}
+      <CardSection />
+
+      <Box
+        onClick={() => alert("☆화이팅☆")}
+        sx={{
+          backgroundColor: primaryBlue400,
+          mt: "35px",
+          py: "12px",
+        }}
+      >
+        <Typography align="center" fontSize={16} color="#FFF" fontWeight={600}>
+          매치 화이팅입니다~
+        </Typography>
+      </Box>
     </Container>
   );
 }

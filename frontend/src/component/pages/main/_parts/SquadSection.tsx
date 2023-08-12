@@ -26,8 +26,8 @@ export function SquadSection() {
   const [isSelectFinish, setIsSelectFinish] = useState(false);
 
   // 결과
-  const [matchSquadList, setMatchSquadList] = useState();
-  const [matchPlayerList, setMatchPlayerList] = useState();
+  const [matchSquadList, setMatchSquadList] = useState<any[]>([]);
+  const [matchPlayerList, setMatchPlayerList] = useState<{}>({});
 
   const onChangeSelect = (player: PlayerListType, mode: string) => {
     if (mode === "add") {
@@ -97,7 +97,7 @@ export function SquadSection() {
     const femaleQueue = [...femalePlayers];
 
     const newMatchSquadList = [];
-    const newMatchPlayerList = {};
+    const newMatchPlayerList: { [key: string]: number } = {};
 
     for (const match of matchList) {
       const maleSquad = [];
@@ -109,10 +109,13 @@ export function SquadSection() {
           return;
         }
         const player = maleQueue.shift();
-        maleQueue.push(player);
-        maleSquad.push(player);
-        newMatchPlayerList[player.name] =
-          (newMatchPlayerList[player.name] || 0) + 1;
+        if (player) {
+          // undefined가 아닌지 확인
+          maleQueue.push(player);
+          maleSquad.push(player);
+          newMatchPlayerList[player.name] =
+            (newMatchPlayerList[player.name] || 0) + 1;
+        }
       }
 
       for (let i = 0; i < match.female; i++) {
@@ -121,10 +124,12 @@ export function SquadSection() {
           return;
         }
         const player = femaleQueue.shift();
-        femaleQueue.push(player);
-        femaleSquad.push(player);
-        newMatchPlayerList[player.name] =
-          (newMatchPlayerList[player.name] || 0) + 1;
+        if (player) {
+          femaleQueue.push(player);
+          femaleSquad.push(player);
+          newMatchPlayerList[player.name] =
+            (newMatchPlayerList[player.name] || 0) + 1;
+        }
       }
 
       newMatchSquadList.push({ male: maleSquad, female: femaleSquad });
@@ -135,7 +140,7 @@ export function SquadSection() {
   };
 
   return (
-    <Box>
+    <Box sx={{ px: "15px" }}>
       {/* 타이틀 */}
       <Typography fontSize={20} fontWeight={600} sx={{ mt: "20px", mb: "6px" }}>
         스쿼드 생성
@@ -273,7 +278,7 @@ export function SquadSection() {
                   {index + 1} 경기
                   <RowStack spacing="4px">
                     <Typography>(남) -</Typography>
-                    {each.male.map(function (player) {
+                    {each.male.map(function (player: any) {
                       return (
                         <Typography key={`${index + 1}경기${player.name}`}>
                           {player.name}
@@ -283,7 +288,7 @@ export function SquadSection() {
                   </RowStack>
                   <RowStack spacing="4px">
                     <Typography>(여) -</Typography>
-                    {each.female.map(function (player) {
+                    {each.female.map(function (player: any) {
                       return (
                         <Typography key={`${index + 1}경기${player.name}`}>
                           {player.name}
@@ -305,8 +310,8 @@ export function SquadSection() {
             <Typography fontWeight={600} fontSize={16} sx={{ mb: "10px" }}>
               개인 당 경기 수
             </Typography>
-            {Object.entries(matchPlayerList)
-              .sort((a, b) => b[1] - a[1]) // 많은 순으로 정렬
+            {Object.entries<string | number>(matchPlayerList)
+              .sort((a, b) => (b[1] as number) - (a[1] as number)) // 많은 순으로 정렬
               .map(([playerName, matchCount]) => (
                 <Typography key={playerName}>
                   {playerName}({matchCount}경기)
