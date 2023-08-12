@@ -274,8 +274,10 @@ export function SquadSection() {
             </Typography>
             {matchSquadList.map(function (each, index) {
               return (
-                <Box key={`${index}경기 스쿼드`} sx={{ mb: "10px" }}>
-                  {index + 1} 경기
+                <Box key={`${index}경기 스쿼드`} sx={{ mb: "12px" }}>
+                  <Typography fontWeight={600} sx={{ mb: "2px" }}>
+                    {index + 1} 경기
+                  </Typography>
                   <RowStack spacing="4px">
                     <Typography>(남) -</Typography>
                     {each.male.map(function (player: any) {
