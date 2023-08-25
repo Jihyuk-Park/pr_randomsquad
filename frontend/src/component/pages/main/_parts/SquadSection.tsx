@@ -20,7 +20,15 @@ export function SquadSection() {
   const [playerList, setPlayerList] = useState<PlayerListType[]>([]);
   const [addGuestModal, setAddGuestModal] = useState(false);
 
-  const [matchList, setMatchList] = useState<MatchListType[]>([]);
+  const [matchList, setMatchList] = useState<MatchListType[]>([
+    { male: 3, female: 2 },
+    { male: 2, female: 3 },
+    { male: 5, female: 0 },
+    { male: 0, female: 5 },
+    { male: 3, female: 2 },
+    { male: 2, female: 3 },
+    { male: 3, female: 2 },
+  ]);
   const defaultMatch = { male: 3, female: 2 };
 
   const [isSelectFinish, setIsSelectFinish] = useState(false);
@@ -133,6 +141,57 @@ export function SquadSection() {
       }
 
       newMatchSquadList.push({ male: maleSquad, female: femaleSquad });
+    }
+
+    const getGoalKeeper = (squad: any[]) => {
+      // 가장 적게 골키퍼로 뛴 선수의 횟수 찾기
+      let minGKTimes = Math.min(
+        ...squad.map((player) => newMatchPlayerList[player.name] || 0)
+      );
+
+      // 해당 횟수로 뛴 선수들만 필터링
+      let potentialGKs = squad.filter(
+        (player) => (newMatchPlayerList[player.name] || 0) === minGKTimes
+      );
+
+      // 랜덤하게 골키퍼 선택
+      return potentialGKs[Math.floor(Math.random() * potentialGKs.length)].name;
+    };
+
+    // 골키퍼 지정 로직
+    for (const squad of newMatchSquadList) {
+      if (squad.male.length > 1) {
+        squad.maleGoalKeeper = getGoalKeeper(squad.male);
+      } else {
+        squad.femaleGoalKeeper = getGoalKeeper(squad.female);
+      }
+
+      // 골키퍼로 뛴 횟수 업데이트
+      if (squad.maleGoalKeeper) {
+        newMatchPlayerList[squad.maleGoalKeeper] =
+          (newMatchPlayerList[squad.maleGoalKeeper] || 0) + 1;
+      }
+      if (squad.femaleGoalKeeper) {
+        newMatchPlayerList[squad.femaleGoalKeeper] =
+          (newMatchPlayerList[squad.femaleGoalKeeper] || 0) + 1;
+      }
+
+      // 골키퍼를 배열의 맨 앞으로 이동
+      if (squad.maleGoalKeeper) {
+        const gkIndex = squad.male.findIndex(
+          (player) => player.name === squad.maleGoalKeeper
+        );
+        const [gkPlayer] = squad.male.splice(gkIndex, 1);
+        squad.male.unshift(gkPlayer);
+      }
+
+      if (squad.femaleGoalKeeper) {
+        const gkIndex = squad.female.findIndex(
+          (player) => player.name === squad.femaleGoalKeeper
+        );
+        const [gkPlayer] = squad.female.splice(gkIndex, 1);
+        squad.female.unshift(gkPlayer);
+      }
     }
 
     setMatchSquadList(newMatchSquadList);
@@ -281,8 +340,13 @@ export function SquadSection() {
                   <RowStack spacing="4px">
                     <Typography>(남) -</Typography>
                     {each.male.map(function (player: any) {
+                      const isGoalKeeper = player.name === each.maleGoalKeeper;
                       return (
-                        <Typography key={`${index + 1}경기${player.name}`}>
+                        <Typography
+                          key={`${index + 1}경기${player.name}`}
+                          fontWeight={isGoalKeeper ? 600 : 400}
+                        >
+                          {isGoalKeeper && "(GK)"}
                           {player.name}
                         </Typography>
                       );
@@ -291,8 +355,14 @@ export function SquadSection() {
                   <RowStack spacing="4px">
                     <Typography>(여) -</Typography>
                     {each.female.map(function (player: any) {
+                      const isGoalKeeper =
+                        player.name === each.femaleGoalKeeper;
                       return (
-                        <Typography key={`${index + 1}경기${player.name}`}>
+                        <Typography
+                          key={`${index + 1}경기${player.name}`}
+                          fontWeight={isGoalKeeper ? 600 : 400}
+                        >
+                          {isGoalKeeper && "(GK)"}
                           {player.name}
                         </Typography>
                       );
@@ -314,11 +384,24 @@ export function SquadSection() {
             </Typography>
             {Object.entries<string | number>(matchPlayerList)
               .sort((a, b) => (b[1] as number) - (a[1] as number)) // 많은 순으로 정렬
-              .map(([playerName, matchCount]) => (
-                <Typography key={playerName}>
-                  {playerName}({matchCount}경기)
-                </Typography>
-              ))}
+              .map(([playerName, matchCount]) => {
+                const gkNum = matchSquadList.filter(
+                  (match) =>
+                    match.femaleGoalKeeper === playerName ||
+                    match.maleGoalKeeper === playerName
+                ).length;
+                return (
+                  <RowStack key={playerName}>
+                    <Typography>
+                      {playerName}({matchCount}경기)
+                    </Typography>
+                    <Typography fontSize={14} color="#999999">
+                      {" "}
+                      (GK {gkNum})
+                    </Typography>
+                  </RowStack>
+                );
+              })}
           </Box>
         )}
       </Box>
