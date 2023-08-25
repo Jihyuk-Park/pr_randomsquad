@@ -104,6 +104,17 @@ export function SquadSection() {
     const malePlayers = playerList.filter((player) => player.sex === "남");
     const femalePlayers = playerList.filter((player) => player.sex === "여");
 
+    const maxMale = Math.max(...matchList.map((item) => item.male));
+    const maxFemale = Math.max(...matchList.map((item) => item.female));
+
+    if (maxMale > malePlayers.length) {
+      alert("매치에 필요한 남성 인원이 부족합니다");
+      return null;
+    } else if (maxFemale > femalePlayers.length) {
+      alert("매치에 필요한 여성 인원이 부족합니다");
+      return null;
+    }
+
     // 선수들을 랜덤하게 섞는 함수
     const shufflePlayers = (players: any) =>
       [...players].sort(() => Math.random() - 0.5);
