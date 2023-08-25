@@ -88,48 +88,48 @@ export function SquadSection() {
     const malePlayers = playerList.filter((player) => player.sex === "남");
     const femalePlayers = playerList.filter((player) => player.sex === "여");
 
-    // 남성 선수 명단을 랜덤하게 섞기
-    malePlayers.sort(() => Math.random() - 0.5);
-    // 여성 선수 명단을 랜덤하게 섞기
-    femalePlayers.sort(() => Math.random() - 0.5);
+    // 선수들을 랜덤하게 섞는 함수
+    const shufflePlayers = (players: any) =>
+      [...players].sort(() => Math.random() - 0.5);
 
-    const maleQueue = [...malePlayers];
-    const femaleQueue = [...femalePlayers];
+    let maleQueue = shufflePlayers(malePlayers);
+    let femaleQueue = shufflePlayers(femalePlayers);
 
     const newMatchSquadList = [];
     const newMatchPlayerList: { [key: string]: number } = {};
 
     for (const match of matchList) {
-      const maleSquad = [];
-      const femaleSquad = [];
+      const maleSquad: any = [];
+      const femaleSquad: any = [];
 
       for (let i = 0; i < match.male; i++) {
         if (maleQueue.length === 0) {
-          alert("에러: 남성 선수가 부족합니다.");
-          return;
+          maleQueue = shufflePlayers(malePlayers); // 모든 선수를 사용한 경우 다시 섞는다
         }
-        const player = maleQueue.shift();
-        if (player) {
-          // undefined가 아닌지 확인
+        let player = maleQueue.shift();
+        while (maleSquad.includes(player)) {
+          // 이미 선택된 선수를 피하기 위한 루프
           maleQueue.push(player);
-          maleSquad.push(player);
-          newMatchPlayerList[player.name] =
-            (newMatchPlayerList[player.name] || 0) + 1;
+          player = maleQueue.shift();
         }
+        maleSquad.push(player);
+        newMatchPlayerList[player.name] =
+          (newMatchPlayerList[player.name] || 0) + 1;
       }
 
       for (let i = 0; i < match.female; i++) {
         if (femaleQueue.length === 0) {
-          alert("에러: 여성 선수가 부족합니다.");
-          return;
+          femaleQueue = shufflePlayers(femalePlayers); // 모든 선수를 사용한 경우 다시 섞는다
         }
-        const player = femaleQueue.shift();
-        if (player) {
+        let player = femaleQueue.shift();
+        while (femaleSquad.includes(player)) {
+          // 이미 선택된 선수를 피하기 위한 루프
           femaleQueue.push(player);
-          femaleSquad.push(player);
-          newMatchPlayerList[player.name] =
-            (newMatchPlayerList[player.name] || 0) + 1;
+          player = femaleQueue.shift();
         }
+        femaleSquad.push(player);
+        newMatchPlayerList[player.name] =
+          (newMatchPlayerList[player.name] || 0) + 1;
       }
 
       newMatchSquadList.push({ male: maleSquad, female: femaleSquad });
