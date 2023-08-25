@@ -15,6 +15,14 @@ export type MatchListType = {
   female: number;
 };
 
+// 스쿼드 항목의 타입 정의
+export type SquadItemType = {
+  male: PlayerListType[];
+  female: PlayerListType[];
+  maleGoalKeeper?: string;
+  femaleGoalKeeper?: string;
+};
+
 export function SquadSection() {
   const [memberAndGuest, setMemberAndGuest] = useState(nameList);
   const [playerList, setPlayerList] = useState<PlayerListType[]>([]);
@@ -34,7 +42,7 @@ export function SquadSection() {
   const [isSelectFinish, setIsSelectFinish] = useState(false);
 
   // 결과
-  const [matchSquadList, setMatchSquadList] = useState<any[]>([]);
+  const [matchSquadList, setMatchSquadList] = useState<SquadItemType[]>([]);
   const [matchPlayerList, setMatchPlayerList] = useState<{}>({});
 
   const onChangeSelect = (player: PlayerListType, mode: string) => {
@@ -103,7 +111,7 @@ export function SquadSection() {
     let maleQueue = shufflePlayers(malePlayers);
     let femaleQueue = shufflePlayers(femalePlayers);
 
-    const newMatchSquadList = [];
+    const newMatchSquadList: SquadItemType[] = [];
     const newMatchPlayerList: { [key: string]: number } = {};
 
     for (const match of matchList) {
