@@ -45,6 +45,7 @@ export function SquadSection() {
   const [matchSquadList, setMatchSquadList] = useState<SquadItemType[]>([]);
   const [matchPlayerList, setMatchPlayerList] = useState<{}>({});
 
+  // 플레이어 선택
   const onChangeSelect = (player: PlayerListType, mode: string) => {
     if (mode === "add") {
       setPlayerList((prevState: PlayerListType[]) => [...prevState, player]);
@@ -99,11 +100,13 @@ export function SquadSection() {
     }
   };
 
-  // 노 키퍼
+  // 키퍼
   const makeSquad = () => {
+    // 남 & 여 필터링
     const malePlayers = playerList.filter((player) => player.sex === "남");
     const femalePlayers = playerList.filter((player) => player.sex === "여");
 
+    // 유효한 수인지 검증
     const maxMale = Math.max(...matchList.map((item) => item.male));
     const maxFemale = Math.max(...matchList.map((item) => item.female));
 
@@ -122,8 +125,12 @@ export function SquadSection() {
     let maleQueue = shufflePlayers(malePlayers);
     let femaleQueue = shufflePlayers(femalePlayers);
 
+    // 임시 배열&객체
     const newMatchSquadList: SquadItemType[] = [];
-    const newMatchPlayerList: { [key: string]: number } = {};
+    const newMatchPlayerList: any = {};
+    for (const player of playerList) {
+      newMatchPlayerList[player.name] = { match: 0, goalKeeper: 0 };
+    }
 
     for (const match of matchList) {
       const maleSquad: any = [];
@@ -140,8 +147,8 @@ export function SquadSection() {
           player = maleQueue.shift();
         }
         maleSquad.push(player);
-        newMatchPlayerList[player.name] =
-          (newMatchPlayerList[player.name] || 0) + 1;
+        newMatchPlayerList[player.name].match =
+          (newMatchPlayerList[player.name].match || 0) + 1;
       }
 
       for (let i = 0; i < match.female; i++) {
@@ -155,26 +162,37 @@ export function SquadSection() {
           player = femaleQueue.shift();
         }
         femaleSquad.push(player);
-        newMatchPlayerList[player.name] =
-          (newMatchPlayerList[player.name] || 0) + 1;
+        newMatchPlayerList[player.name].match =
+          (newMatchPlayerList[player.name].match || 0) + 1;
       }
 
       newMatchSquadList.push({ male: maleSquad, female: femaleSquad });
     }
 
+    // 골키퍼 지정 함수
     const getGoalKeeper = (squad: any[]) => {
       // 가장 적게 골키퍼로 뛴 선수의 횟수 찾기
       let minGKTimes = Math.min(
-        ...squad.map((player) => newMatchPlayerList[player.name] || 0)
+        ...squad.map(
+          (player) => newMatchPlayerList[player.name].goalKeeper || 0
+        )
       );
 
       // 해당 횟수로 뛴 선수들만 필터링
       let potentialGKs = squad.filter(
-        (player) => (newMatchPlayerList[player.name] || 0) === minGKTimes
+        (player) =>
+          (newMatchPlayerList[player.name].goalKeeper || 0) === minGKTimes
       );
+      console.log(minGKTimes, "후보 목록", potentialGKs);
 
       // 랜덤하게 골키퍼 선택
-      return potentialGKs[Math.floor(Math.random() * potentialGKs.length)].name;
+      let selectedGK =
+        potentialGKs[Math.floor(Math.random() * potentialGKs.length)];
+
+      // 선택된 골키퍼의 goalKeeper 값을 +1 증가시키기
+      newMatchPlayerList[selectedGK.name].goalKeeper += 1;
+      // 선택된 골키퍼의 이름 반환
+      return selectedGK.name;
     };
 
     // 골키퍼 지정 로직
@@ -183,16 +201,6 @@ export function SquadSection() {
         squad.maleGoalKeeper = getGoalKeeper(squad.male);
       } else {
         squad.femaleGoalKeeper = getGoalKeeper(squad.female);
-      }
-
-      // 골키퍼로 뛴 횟수 업데이트
-      if (squad.maleGoalKeeper) {
-        newMatchPlayerList[squad.maleGoalKeeper] =
-          (newMatchPlayerList[squad.maleGoalKeeper] || 0) + 1;
-      }
-      if (squad.femaleGoalKeeper) {
-        newMatchPlayerList[squad.femaleGoalKeeper] =
-          (newMatchPlayerList[squad.femaleGoalKeeper] || 0) + 1;
       }
 
       // 골키퍼를 배열의 맨 앞으로 이동
@@ -212,6 +220,9 @@ export function SquadSection() {
         squad.female.unshift(gkPlayer);
       }
     }
+
+    // console.log(matchSquadList);
+    // console.log(newMatchPlayerList);
 
     setMatchSquadList(newMatchSquadList);
     setMatchPlayerList(newMatchPlayerList);
@@ -365,8 +376,8 @@ export function SquadSection() {
                           key={`${index + 1}경기${player.name}`}
                           fontWeight={isGoalKeeper ? 600 : 400}
                         >
-                          {isGoalKeeper && "(GK)"}
                           {player.name}
+                          {isGoalKeeper && "* "}
                         </Typography>
                       );
                     })}
@@ -381,8 +392,8 @@ export function SquadSection() {
                           key={`${index + 1}경기${player.name}`}
                           fontWeight={isGoalKeeper ? 600 : 400}
                         >
-                          {isGoalKeeper && "(GK)"}
                           {player.name}
+                          {isGoalKeeper && "* "}
                         </Typography>
                       );
                     })}
@@ -401,22 +412,17 @@ export function SquadSection() {
             <Typography fontWeight={600} fontSize={16} sx={{ mb: "10px" }}>
               개인 당 경기 수
             </Typography>
-            {Object.entries<string | number>(matchPlayerList)
-              .sort((a, b) => (b[1] as number) - (a[1] as number)) // 많은 순으로 정렬
-              .map(([playerName, matchCount]) => {
-                const gkNum = matchSquadList.filter(
-                  (match) =>
-                    match.femaleGoalKeeper === playerName ||
-                    match.maleGoalKeeper === playerName
-                ).length;
+            {Object.entries<any>(matchPlayerList)
+              .sort((a, b) => (b[1].match as number) - (a[1].match as number)) // 많은 순으로 정렬
+              .map((each) => {
                 return (
-                  <RowStack key={playerName}>
+                  <RowStack key={each[0]}>
                     <Typography>
-                      {playerName}({matchCount}경기)
+                      {each[0]}({each[1].match}경기)
                     </Typography>
                     <Typography fontSize={14} color="#999999">
                       {" "}
-                      (GK {gkNum})
+                      (GK {each[1].goalKeeper})
                     </Typography>
                   </RowStack>
                 );
