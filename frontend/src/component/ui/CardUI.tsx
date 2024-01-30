@@ -318,7 +318,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              97 <span>PAC</span>
+              94 <span>PAC</span>
             </Typography>
             <Typography
               sx={{
@@ -329,7 +329,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              95 <span>SHO</span>
+              97 <span>SHO</span>
             </Typography>
             <Typography
               sx={{
@@ -340,7 +340,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              94 <span>PAS</span>
+              97 <span>PAS</span>
             </Typography>
           </Stack>
 
@@ -358,7 +358,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              99 <span>DRI</span>
+              92 <span>DRI</span>
             </Typography>
             <Typography
               sx={{
@@ -369,7 +369,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              35 <span>DEF</span>
+              96 <span>DEF</span>
             </Typography>
             <Typography
               sx={{
@@ -380,7 +380,7 @@ export const PlayerCard = () => {
                 color: goldColor,
               }}
             >
-              68 <span>PHY</span>
+              93 <span>PHY</span>
             </Typography>
           </Stack>
         </Box>
