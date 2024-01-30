@@ -1,5 +1,5 @@
 import { RowStack } from "@/component/ui/BoxStack";
-import CardUI from "@/component/ui/CardUI";
+import { CardUI } from "@/component/ui/CardUI";
 import { cardList } from "@/constant/commonVariable";
 import { Box, Typography } from "@mui/material";
 import Slider from "react-slick";

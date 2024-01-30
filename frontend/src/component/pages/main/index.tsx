@@ -1,8 +1,8 @@
-import CardUI from "@/component/ui/CardUI";
 import { primaryBlue400 } from "@/constant/styles/styleTheme";
 import { Box, Container, Typography } from "@mui/material";
 import { SquadSection } from "./_parts/SquadSection";
 import { CardSection } from "./_parts/CardSection";
+import { JIHYUK } from "./_parts/JIHYUK";
 
 export default function MainPage() {
   return (
@@ -32,6 +32,9 @@ export default function MainPage() {
 
       {/* 카드 섹션 */}
       <CardSection />
+
+      {/* 방장사기 */}
+      <JIHYUK />
 
       <Box
         onClick={() => alert("☆화이팅☆")}
